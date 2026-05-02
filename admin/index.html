@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网站管理后台 - 佛山彩信装饰材料厂</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <div class="login-logo">彩</div>
+      <h2>网站管理后台</h2>
+      <p class="login-subtitle">佛山彩信装饰材料厂</p>
+      <div class="login-form">
+        <input type="password" id="passwordInput" placeholder="请输入管理密码" autofocus>
+        <button onclick="login()" id="loginBtn">登录</button>
+        <p id="loginError" class="login-error"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="dashboard" class="dashboard" style="display:none;">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-logo">彩</span>
+        <span class="topbar-title">CMS 后台管理</span>
+      </div>
+      <div class="topbar-right">
+        <a href="/" target="_blank" class="topbar-link">查看网站</a>
+        <button onclick="logout()" class="btn-logout">退出登录</button>
+      </div>
+    </div>
+
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <button class="nav-item active" onclick="switchTab('settings')">
+          <span class="nav-icon">⚙</span>
+          <span>全局设置</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('home')">
+          <span class="nav-icon">🏠</span>
+          <span>首页内容</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('about')">
+          <span class="nav-icon">📋</span>
+          <span>关于我们</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('banners')">
+          <span class="nav-icon">📄</span>
+          <span>页面横幅</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('footer')">
+          <span class="nav-icon">📌</span>
+          <span>页脚设置</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('gallery')">
+          <span class="nav-icon">📸</span>
+          <span>产品图册</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('product_images')">
+          <span class="nav-icon">🖼</span>
+          <span>产品图片</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('images')">
+          <span class="nav-icon">🖼</span>
+          <span>图片管理</span>
+        </button>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main class="main-content">
+
+        <!-- ====== Settings Tab ====== -->
+        <div id="tab-settings" class="tab-content active">
+          <h2 class="tab-title">全局设置</h2>
+          <p class="tab-desc">修改公司的基本信息，这些信息会显示在网站的所有页面上。</p>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label>公司名称 (中文)</label>
+              <input type="text" id="settings-company_name" class="cms-input" onchange="saveSetting('settings', 'company_name', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Company Name (English)</label>
+              <input type="text" id="settings-company_name_en" class="cms-input" onchange="saveSetting('settings', 'company_name_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Logo 文字</label>
+              <input type="text" id="settings-logo_text" class="cms-input" onchange="saveSetting('settings', 'logo_text', this.value)" maxlength="2">
+              <p class="field-hint">显示在网站左上角，建议1-2个中文字</p>
+            </div>
+            <div class="form-group">
+              <label>Logo 图片（可选，上传后替代Logo文字）</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-settings-logo_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未设置</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="settings-logo_image" class="cms-image-input" onchange="saveSetting('settings', 'logo_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('settings-logo_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('settings-logo_image')">清除</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>联系电话</label>
+                <input type="text" id="settings-phone" class="cms-input" onchange="saveSetting('settings', 'phone', this.value)">
+              </div>
+              <div class="form-group">
+                <label>电子邮箱</label>
+                <input type="email" id="settings-email" class="cms-input" onchange="saveSetting('settings', 'email', this.value)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>公司地址</label>
+              <input type="text" id="settings-address" class="cms-input" onchange="saveSetting('settings', 'address', this.value)">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>工作时间 (中文)</label>
+                <input type="text" id="settings-worktime" class="cms-input" onchange="saveSetting('settings', 'worktime', this.value)">
+              </div>
+              <div class="form-group">
+                <label>Working Hours (English)</label>
+                <input type="text" id="settings-worktime_en" class="cms-input" onchange="saveSetting('settings', 'worktime_en', this.value)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>ICP 备案号</label>
+              <input type="text" id="settings-icp" class="cms-input" onchange="saveSetting('settings', 'icp', this.value)">
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Home Tab ====== -->
+        <div id="tab-home" class="tab-content">
+          <h2 class="tab-title">首页内容</h2>
+          <p class="tab-desc">编辑首页的横幅、介绍和底部行动号召区域。</p>
+
+          <h3 class="section-label">Hero 横幅</h3>
+          <div class="form-section">
+            <div class="form-group">
+              <label>Hero 主图</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-home-hero_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未选择图片</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="home-hero_image" class="cms-image-input" onchange="saveSetting('home', 'hero_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('home-hero_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('home-hero_image')">清除</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>标语 (中文)</label>
+              <input type="text" id="home-hero_badge" class="cms-input" onchange="saveSetting('home', 'hero_badge', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Tagline (English)</label>
+              <input type="text" id="home-hero_badge_en" class="cms-input" onchange="saveSetting('home', 'hero_badge_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>主标题 (中文)</label>
+              <textarea id="home-hero_title" class="cms-textarea" rows="3" onchange="saveSetting('home', 'hero_title', this.value)"></textarea>
+              <p class="field-hint">支持HTML标签，如 &lt;br&gt; 换行，&lt;span&gt;...&lt;/span&gt; 高亮</p>
+            </div>
+            <div class="form-group">
+              <label>Main Title (English)</label>
+              <textarea id="home-hero_title_en" class="cms-textarea" rows="3" onchange="saveSetting('home', 'hero_title_en', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>描述文字 (中文)</label>
+              <textarea id="home-hero_desc" class="cms-textarea" rows="4" onchange="saveSetting('home', 'hero_desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Description (English)</label>
+              <textarea id="home-hero_desc_en" class="cms-textarea" rows="4" onchange="saveSetting('home', 'hero_desc_en', this.value)"></textarea>
+            </div>
+          </div>
+
+          <h3 class="section-label">关于彩信（首页区域）</h3>
+          <div class="form-section">
+            <div class="form-group">
+              <label>标题 (中文)</label>
+              <input type="text" id="home-about_title" class="cms-input" onchange="saveSetting('home', 'about_title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Title (English)</label>
+              <input type="text" id="home-about_title_en" class="cms-input" onchange="saveSetting('home', 'about_title_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>描述 (中文)</label>
+              <textarea id="home-about_desc" class="cms-textarea" rows="3" onchange="saveSetting('home', 'about_desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Description (English)</label>
+              <textarea id="home-about_desc_en" class="cms-textarea" rows="3" onchange="saveSetting('home', 'about_desc_en', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>描述2 (中文)</label>
+              <textarea id="home-about_desc2" class="cms-textarea" rows="3" onchange="saveSetting('home', 'about_desc2', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Description 2 (English)</label>
+              <textarea id="home-about_desc2_en" class="cms-textarea" rows="3" onchange="saveSetting('home', 'about_desc2_en', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>关于彩信 - 区域图片</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-home-about_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未选择图片</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="home-about_image" class="cms-image-input" onchange="saveSetting('home', 'about_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('home-about_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('home-about_image')">清除</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="section-label">底部 CTA 区域</h3>
+          <div class="form-section">
+            <div class="form-group">
+              <label>标题 (中文)</label>
+              <input type="text" id="home-cta_title" class="cms-input" onchange="saveSetting('home', 'cta_title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Title (English)</label>
+              <input type="text" id="home-cta_title_en" class="cms-input" onchange="saveSetting('home', 'cta_title_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>描述 (中文)</label>
+              <textarea id="home-cta_desc" class="cms-textarea" rows="2" onchange="saveSetting('home', 'cta_desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Description (English)</label>
+              <textarea id="home-cta_desc_en" class="cms-textarea" rows="2" onchange="saveSetting('home', 'cta_desc_en', this.value)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== About Tab ====== -->
+        <div id="tab-about" class="tab-content">
+          <h2 class="tab-title">关于我们</h2>
+          <p class="tab-desc">编辑公司介绍和生产设备信息。</p>
+
+          <h3 class="section-label">公司简介</h3>
+          <div class="form-section">
+            <div class="form-group">
+              <label>标题 (中文)</label>
+              <input type="text" id="about-intro_title" class="cms-input" onchange="saveSetting('about', 'intro_title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Title (English)</label>
+              <input type="text" id="about-intro_title_en" class="cms-input" onchange="saveSetting('about', 'intro_title_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>介绍文字 1 (中文)</label>
+              <textarea id="about-intro_p1" class="cms-textarea" rows="4" onchange="saveSetting('about', 'intro_p1', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Paragraph 1 (English)</label>
+              <textarea id="about-intro_p1_en" class="cms-textarea" rows="4" onchange="saveSetting('about', 'intro_p1_en', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>介绍文字 2 (中文)</label>
+              <textarea id="about-intro_p2" class="cms-textarea" rows="4" onchange="saveSetting('about', 'intro_p2', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Paragraph 2 (English)</label>
+              <textarea id="about-intro_p2_en" class="cms-textarea" rows="4" onchange="saveSetting('about', 'intro_p2_en', this.value)"></textarea>
+            </div>
+          </div>
+
+          <h3 class="section-label">生产设备描述</h3>
+          <div class="form-section">
+            <div class="form-group">
+              <label>设备章节标题 (中文)</label>
+              <input type="text" id="about-equipment_title" class="cms-input" onchange="saveSetting('about', 'equipment_title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Equipment Title (English)</label>
+              <input type="text" id="about-equipment_title_en" class="cms-input" onchange="saveSetting('about', 'equipment_title_en', this.value)">
+            </div>
+            <div class="form-group">
+              <label>凹版印刷机 (中文)</label>
+              <textarea id="about-gravure_desc" class="cms-textarea" rows="2" onchange="saveSetting('about', 'gravure_desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Gravure (English)</label>
+              <textarea id="about-gravure_desc_en" class="cms-textarea" rows="2" onchange="saveSetting('about', 'gravure_desc_en', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>数码打印机 (中文)</label>
+              <textarea id="about-digital_desc" class="cms-textarea" rows="2" onchange="saveSetting('about', 'digital_desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Digital Printers (English)</label>
+              <textarea id="about-digital_desc_en" class="cms-textarea" rows="2" onchange="saveSetting('about', 'digital_desc_en', this.value)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Banners Tab ====== -->
+        <div id="tab-banners" class="tab-content">
+          <h2 class="tab-title">页面横幅</h2>
+          <p class="tab-desc">编辑各个页面顶部横幅的标题文字。</p>
+
+          <div class="form-section">
+            <div class="form-row">
+              <div class="form-group">
+                <label>关于我们 (中文)</label>
+                <input type="text" id="banners-about" class="cms-input" onchange="saveSetting('banners', 'about', this.value)">
+              </div>
+              <div class="form-group">
+                <label>About (English)</label>
+                <input type="text" id="banners-about_en" class="cms-input" onchange="saveSetting('banners', 'about_en', this.value)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>产品中心 (中文)</label>
+                <input type="text" id="banners-products" class="cms-input" onchange="saveSetting('banners', 'products', this.value)">
+              </div>
+              <div class="form-group">
+                <label>Products (English)</label>
+                <input type="text" id="banners-products_en" class="cms-input" onchange="saveSetting('banners', 'products_en', this.value)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>生产能力 (中文)</label>
+                <input type="text" id="banners-production" class="cms-input" onchange="saveSetting('banners', 'production', this.value)">
+              </div>
+              <div class="form-group">
+                <label>Production (English)</label>
+                <input type="text" id="banners-production_en" class="cms-input" onchange="saveSetting('banners', 'production_en', this.value)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>常见问题 (中文)</label>
+                <input type="text" id="banners-faq" class="cms-input" onchange="saveSetting('banners', 'faq', this.value)">
+              </div>
+              <div class="form-group">
+                <label>FAQ (English)</label>
+                <input type="text" id="banners-faq_en" class="cms-input" onchange="saveSetting('banners', 'faq_en', this.value)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>联系我们 (中文)</label>
+                <input type="text" id="banners-contact" class="cms-input" onchange="saveSetting('banners', 'contact', this.value)">
+              </div>
+              <div class="form-group">
+                <label>Contact (English)</label>
+                <input type="text" id="banners-contact_en" class="cms-input" onchange="saveSetting('banners', 'contact_en', this.value)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Footer Tab ====== -->
+        <div id="tab-footer" class="tab-content">
+          <h2 class="tab-title">页脚设置</h2>
+          <p class="tab-desc">编辑网站底部信息。</p>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label>底部描述 (中文)</label>
+              <textarea id="footer-desc" class="cms-textarea" rows="3" onchange="saveSetting('footer', 'desc', this.value)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Footer Description (English)</label>
+              <textarea id="footer-desc_en" class="cms-textarea" rows="3" onchange="saveSetting('footer', 'desc_en', this.value)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Gallery Tab ====== -->
+        <div id="tab-gallery" class="tab-content">
+          <h2 class="tab-title">产品图册管理</h2>
+          <p class="tab-desc">管理产品图册中的图片。上传新图片、设置标题和分类，图册会按分类展示在网站的产品图册页面。</p>
+
+          <div class="form-section">
+            <div style="margin-bottom:16px;">
+              <button class="btn-upload" onclick="openGalleryImagePicker()">+ 从图库添加图片</button>
+            </div>
+            <div id="galleryImageList"></div>
+            <p id="galleryEmpty" style="color:var(--text-light);text-align:center;padding:20px;">暂无图册图片，点击上方按钮添加</p>
+          </div>
+        </div>
+
+        <!-- ====== Product Images Tab ====== -->
+        <div id="tab-product_images" class="tab-content">
+          <h2 class="tab-title">产品图片</h2>
+          <p class="tab-desc">替换产品中心页面的图片，建议使用 600×400 比例。</p>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label>室内门木纹转印纸 - 产品图</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-products-door_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未选择图片</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="products-door_image" class="cms-image-input" onchange="saveSetting('products', 'door_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('products-door_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('products-door_image')">清除</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>铝型材木纹转印纸 - 产品图</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-products-aluminum_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未选择图片</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="products-aluminum_image" class="cms-image-input" onchange="saveSetting('products', 'aluminum_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('products-aluminum_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('products-aluminum_image')">清除</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>定制数码转印纸 - 产品图</label>
+              <div class="image-picker">
+                <div class="image-preview" id="preview-products-custom_image">
+                  <img id="" style="display:none" alt="">
+                  <span class="image-placeholder-text">未选择图片</span>
+                </div>
+                <div class="image-picker-actions">
+                  <input type="hidden" id="products-custom_image" class="cms-image-input" onchange="saveSetting('products', 'custom_image', this.value)">
+                  <button type="button" class="btn-small" onclick="openImagePicker('products-custom_image')">从图库选择</button>
+                  <button type="button" class="btn-small btn-small-danger" onclick="clearImage('products-custom_image')">清除</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Images Tab ====== -->
+        <div id="tab-images" class="tab-content">
+          <h2 class="tab-title">图片管理</h2>
+          <p class="tab-desc">上传和管理网站图片（Logo、产品图、工厂照片等）。支持 JPG/PNG/GIF/SVG，单张最大 5MB。</p>
+
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p>点击上传图片，或拖拽文件到此处</p>
+            <span class="upload-hint">支持 JPG、PNG、GIF、SVG、WebP</span>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="uploadFiles(this.files)">
+            <button class="btn-upload" onclick="document.getElementById('fileInput').click()">选择图片</button>
+          </div>
+
+          <div id="imageGrid" class="image-grid"></div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Image Picker Modal -->
+  <div id="imagePickerModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>选择图片</h3>
+        <button class="modal-close" onclick="closeImagePicker()">✕</button>
+      </div>
+      <div id="pickerImageGrid" class="modal-grid"></div>
+      <div class="modal-footer">
+        <input type="file" id="pickerFileInput" accept="image/*" style="display:none" onchange="handlePickerUpload(this.files)">
+        <button class="btn-upload-inline" onclick="uploadAndSelect()">上传新图片</button>
+        <div style="flex:1"></div>
+        <button class="btn-cancel" onclick="closeImagePicker()">取消</button>
+        <button class="btn-confirm" id="pickerConfirm" disabled onclick="confirmImagePicker()">确认选择</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

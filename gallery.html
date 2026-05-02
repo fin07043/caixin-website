@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产品图册 - 佛山彩信装饰材料厂</title>
+  <meta name="description" content="佛山彩信装饰材料厂产品图册，室内门木纹转印纸、铝型材木纹转印纸、定制数码转印纸产品展示。">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ========== Gallery Page ========== */
+    .gallery-filters {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .gallery-filters button {
+      padding: 8px 24px;
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      background: var(--bg-white);
+      color: var(--text-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .gallery-filters button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .gallery-filters button.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .gallery-item {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #f5f5f0;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      min-height: 220px;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.4s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover .overlay {
+      opacity: 1;
+    }
+
+    .gallery-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+
+    .gallery-empty .icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    /* ========== Lightbox ========== */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+      background: none;
+      border: none;
+      z-index: 10;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    .lightbox-inner {
+      max-width: 90vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lightbox-inner img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .lightbox-caption {
+      color: rgba(255,255,255,0.8);
+      margin-top: 12px;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 2.5rem;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+      background: rgba(0,0,0,0.3);
+      border: none;
+      padding: 16px 12px;
+      border-radius: 8px;
+    }
+
+    .lightbox-nav:hover { opacity: 1; }
+    .lightbox-prev { left: 16px; }
+    .lightbox-next { right: 16px; }
+
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .lightbox-nav { font-size: 1.8rem; padding: 12px 8px; }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">彩</div>
+      <div class="logo-text">
+        <h1>佛山彩信装饰材料厂</h1>
+        <span data-i18n="hero.badge">Foshan Caixin Decorative Materials Factory</span>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="index.html" data-i18n="nav.home">首页</a>
+      <a href="about.html" data-i18n="nav.about">关于我们</a>
+      <a href="products.html" data-i18n="nav.products">产品中心</a>
+      <a href="gallery.html" class="active" data-i18n="nav.gallery">产品图册</a>
+      <a href="production.html" data-i18n="nav.production">生产能力</a>
+      <a href="faq.html" data-i18n="nav.faq">常见问题</a>
+      <a href="contact.html" data-i18n="nav.contact">联系我们</a>
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="zh">中</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </nav>
+    <button class="mobile-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="page-banner">
+  <div class="container">
+    <h2>产品图册</h2>
+    <p>更多产品图片展示，了解我们的产品细节</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="gallery-filters" id="galleryFilters">
+      <button class="active" data-filter="all">全部</button>
+      <button data-filter="door">室内门系列</button>
+      <button data-filter="aluminum">铝型材系列</button>
+      <button data-filter="custom">定制系列</button>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-empty">
+        <div class="icon">📷</div>
+        <p>暂无图册图片，请在后台管理中添加</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+  <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>佛山彩信装饰材料厂</h3>
+        <p data-i18n="footer.desc">佛山彩信装饰材料厂 — 专业木纹转印纸生产厂家，致力于为客户提供高品质的转印产品和定制服务。</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer.quick">快速链接</h4>
+        <ul>
+          <li><a href="about.html" data-i18n="nav.about">关于我们</a></li>
+          <li><a href="products.html" data-i18n="nav.products">产品中心</a></li>
+          <li><a href="gallery.html">产品图册</a></li>
+          <li><a href="production.html" data-i18n="nav.production">生产能力</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.products">产品分类</h4>
+        <ul>
+          <li><a href="products.html#door" data-i18n="product.door">室内门木纹转印纸</a></li>
+          <li><a href="products.html#aluminum" data-i18n="product.aluminum">铝型材木纹转印纸</a></li>
+          <li><a href="products.html#custom" data-i18n="product.custom">定制数码转印纸</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.contact">联系方式</h4>
+        <ul>
+          <li style="font-size:0.88rem;opacity:0.7;" data-cms-contact="address">广东省佛山市</li>
+          <li><a href="tel:+8612345678900" data-cms-contact="phone">+86 123 4567 8900</a></li>
+          <li><a href="mailto:info@caixin-paper.com" data-cms-contact="email">info@caixin-paper.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer.copyright">© 2025 佛山彩信装饰材料厂 版权所有</span>
+      <span data-i18n="footer.icp">粤ICP备XXXXXXXX号</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/cms-loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ========== Gallery Page Script ==========
+let galleryImages = [];
+let filteredImages = [];
+let currentLightboxIndex = -1;
+
+// Category labels
+const catLabels = {
+  zh: { door: '室内门系列', aluminum: '铝型材系列', custom: '定制系列', all: '全部', uncategorized: '未分类' },
+  en: { door: 'Door Series', aluminum: 'Aluminum Profile', custom: 'Custom Series', all: 'All', uncategorized: 'Uncategorized' }
+};
+
+// Load gallery data from CMS
+async function loadGallery() {
+  try {
+    const res = await fetch('/api/gallery');
+    if (!res.ok) throw new Error('Failed');
+    const data = await res.json();
+    galleryImages = data.images || [];
+    renderGallery();
+  } catch {
+    // If CMS data not available (static mode), show empty
+    console.log('Gallery data not available');
+  }
+}
+
+function renderGallery(filter) {
+  filter = filter || getCurrentFilter();
+  const grid = document.getElementById('galleryGrid');
+
+  if (galleryImages.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty"><div class="icon">📷</div><p>暂无图册图片，请在后台管理中添加</p></div>';
+    return;
+  }
+
+  filteredImages = filter === 'all'
+    ? galleryImages
+    : galleryImages.filter(img => img.category === filter);
+
+  if (filteredImages.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty"><div class="icon">🔍</div><p>该分类暂无图片</p></div>';
+    return;
+  }
+
+  const lang = (typeof currentLang !== 'undefined' ? currentLang : 'zh');
+  grid.innerHTML = filteredImages.map((img, i) => `
+    <div class="gallery-item" onclick="openLightbox(${i})">
+      <img src="${img.src}" alt="${img.title || ''}" loading="lazy">
+      <div class="overlay">${lang === 'zh' ? (img.title || '') : (img.title_en || img.title || '')}</div>
+    </div>
+  `).join('');
+}
+
+function getCurrentFilter() {
+  const active = document.querySelector('.gallery-filters .active');
+  return active ? active.dataset.filter : 'all';
+}
+
+// ========== Filter Buttons ==========
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.gallery-filters button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.gallery-filters button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderGallery(this.dataset.filter);
+    });
+  });
+
+  loadGallery();
+});
+
+// ========== Lightbox ==========
+function openLightbox(index) {
+  currentLightboxIndex = index;
+  const img = filteredImages[index];
+  if (!img) return;
+
+  const lang = (typeof currentLang !== 'undefined' ? currentLang : 'zh');
+  document.getElementById('lightboxImg').src = img.src;
+  document.getElementById('lightboxCaption').textContent =
+    lang === 'zh' ? (img.title || '') : (img.title_en || img.title || '');
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+  currentLightboxIndex = -1;
+}
+
+function navigateLightbox(direction) {
+  const newIndex = currentLightboxIndex + direction;
+  if (newIndex < 0 || newIndex >= filteredImages.length) return;
+  openLightbox(newIndex);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navigateLightbox(-1);
+  if (e.key === 'ArrowRight') navigateLightbox(1);
+});
+</script>
+</body>
+</html>
