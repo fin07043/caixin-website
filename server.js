@@ -337,12 +337,17 @@ app.get('/api/cms-data', (req, res) => {
 });
 
 // ========== Start Server ==========
-app.listen(PORT, () => {
-  console.log('\n=======================================');
-  console.log('  佛山彩信装饰材料厂 - CMS 后台系统');
-  console.log('=======================================');
-  console.log(`  网站地址:  http://localhost:${PORT}`);
-  console.log(`  管理后台:  http://localhost:${PORT}/admin/`);
-  console.log(`  默认密码:  ${ADMIN_PASSWORD}`);
-  console.log('=======================================\n');
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log('\n=======================================');
+    console.log('  佛山彩信装饰材料厂 - CMS 后台系统');
+    console.log('=======================================');
+    console.log(`  网站地址:  http://localhost:${PORT}`);
+    console.log(`  管理后台:  http://localhost:${PORT}/admin/`);
+    console.log(`  默认密码:  ${ADMIN_PASSWORD}`);
+    console.log('=======================================\n');
+  });
+}
+
+// Export for Vercel serverless
+module.exports = app;
