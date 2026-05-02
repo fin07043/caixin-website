@@ -318,10 +318,10 @@ const catLabels = {
 // Load gallery data from CMS
 async function loadGallery() {
   try {
-    const res = await fetch('/api/gallery');
+    const res = await fetch('data/content.json');
     if (!res.ok) throw new Error('Failed');
     const data = await res.json();
-    galleryImages = data.images || [];
+    galleryImages = (data.gallery && data.gallery.images) || [];
     renderGallery();
   } catch {
     // If CMS data not available (static mode), show empty

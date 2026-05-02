@@ -3,7 +3,7 @@
 
 (async function loadCMS() {
   try {
-    const res = await fetch('/api/cms-data');
+    const res = await fetch('data/content.json');
     if (!res.ok) return;
     const cms = await res.json();
 
